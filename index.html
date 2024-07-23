@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Excel File Upload</title>
+    <link rel="stylesheet" href="style.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bona+Nova+SC:ital,wght@0,400;0,700;1,400&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <img src="katyayani.png" alt="Image" class="header-image" />
+
+    <div class="container">
+      <h1 class="title">Upload Excel File</h1>
+
+      <div id="lottie" class="lottie-container"></div>
+      <label for="fileInput" class="label-file-input">Choose a file</label>
+      <input type="file" id="fileInput" accept=".xlsx, .xls" />
+      <div id="output"></div>
+      <div class="phone-numbers-container">
+        <div id="toProcess" class="phone-numbers-section">
+          <h3>To Process</h3>
+        </div>
+        <div id="processing" class="phone-numbers-section">
+          <h3>Processing</h3>
+        </div>
+        <div id="processed" class="phone-numbers-section">
+          <h3>Processed</h3>
+        </div>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bodymovin/5.7.6/lottie.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="script.js"></script>
+  </body>
+</html>

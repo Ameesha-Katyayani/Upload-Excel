@@ -1,0 +1,109 @@
+
+body {
+    font-family: 'Bona Nova SC', serif;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #121212;
+    margin: 0;
+    color: #ddd;
+}
+.title {
+    font-size: 24px;
+    margin-bottom: 20px;
+    color: #ff7e5f;
+}
+.container {
+    text-align: center;
+    background: #1e1e1e;
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    max-width: 800px;
+    width: 100%;
+    margin: 20px;
+}
+
+h1 {
+    margin-bottom: 50px;
+    color: #333;
+}
+
+.lottie-container {
+    width: 50px;
+    height: 50px;
+    margin: 0 auto 20px;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.label-file-input {
+    display: inline-block;
+    margin-bottom: 20px;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #ff7e5f;
+    color: white;
+    font-size: 16px;
+    transition: background-color 0.3s ease;
+}
+
+.label-file-input:hover {
+    background-color: #feb47b;
+    }
+
+
+#fileInput {
+    display: none;
+}
+.phone-numbers-container {
+    display: flex;
+     justify-content: space-between;
+    margin-top: 20px;
+}
+.phone-numbers-section {
+    width: 30%;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #2c2c2c;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+    text-align: left;
+}
+
+.phone-numbers-section h3 {
+    margin-top: 0;
+    font-size: 18px;
+    color: #ff7e5f;
+}
+
+.phone-number {
+    margin: 10px 0;
+    padding: 5px;
+    border-radius: 5px;
+    background-color: #333;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    color: #ddd;
+}
+
+.processing {
+    background-color: #ffeb3b;
+    color: #333;
+}
+
+.processed {
+    background-color: #4caf50;
+    color: #fff;
+}
+.header-image {
+    width: 250px; /* Adjust the width as needed */
+    height: auto;
+    margin-bottom: 20px;
+    border-radius: 50%; /* Apply border-radius to create an oval shape */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
+}

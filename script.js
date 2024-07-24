@@ -7,7 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
     path: "lottie animation.json",
   });
 
-  document.getElementById("fileInput").addEventListener("change", handleFile, false);
+  document
+    .getElementById("fileInput")
+    .addEventListener("change", handleFile, false);
   fetchStatus();
   setInterval(fetchStatus, 2000);
 });
@@ -41,8 +43,8 @@ function displayPhoneNumbers(data) {
     return;
   }
 
-  const phoneNumbers = data.flatMap(row =>
-    Object.values(row).filter(value => {
+  const phoneNumbers = data.flatMap((row) =>
+    Object.values(row).filter((value) => {
       if (typeof value === "string") {
         value = value.trim();
       }
@@ -74,10 +76,12 @@ async function sendPhoneNumbers(phoneNumbers) {
     if (response.status === 200) {
       console.log("Phone numbers sent successfully:", phoneNumbers);
     } else {
-      alert(`Failed to send phone numbers. Status code: ${response.status}`);
+      console.log(
+        `Failed to send phone numbers. Status code: ${response.status}`
+      );
     }
   } catch (error) {
-    alert(`Error sending phone numbers: ${error.message}`);
+    console.log(`Error sending phone numbers: ${error.message}`);
   }
 
   for (let i = 0; i < phoneNumbers.length; i++) {
@@ -85,7 +89,7 @@ async function sendPhoneNumbers(phoneNumbers) {
 
     toProcessDiv.textContent = "";
     processingDiv.textContent = number;
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
 
     processingDiv.textContent = "";
     processedDiv.textContent = number;
@@ -94,12 +98,11 @@ async function sendPhoneNumbers(phoneNumbers) {
       toProcessDiv.textContent = phoneNumbers[i + 1];
     }
 
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    await new Promise((resolve) => setTimeout(resolve, 1000));
   }
 
   // fetchCurrentProcessingNumber();
 }
-
 
 // async function fetchCurrentProcessingNumber() {
 //   try {
@@ -130,24 +133,21 @@ async function sendPhoneNumbers(phoneNumbers) {
 // }
 async function fetchStatus() {
   try {
-    const response = await axios.get('https://callerapp.onrender.com/status');
-    console.log('Status response:', response);
+    const response = await axios.get("https://callerapp.onrender.com/status");
+    console.log("Status response:", response);
     if (response.status === 200) {
-      const { previousSentNumber, currentSentNumber, nextNumber } = response.data;
-      document.getElementById('previousSentNumber').textContent = previousSentNumber || 'None';
-      document.getElementById('currentSentNumber').textContent = currentSentNumber || 'None';
-      document.getElementById('nextNumber').textContent = nextNumber || 'None';
+      const { previousSentNumber, currentSentNumber, nextNumber } =
+        response.data;
+      document.getElementById("previousSentNumber").textContent =
+        previousSentNumber || "None";
+      document.getElementById("currentSentNumber").textContent =
+        currentSentNumber || "None";
+      document.getElementById("nextNumber").textContent = nextNumber || "None";
     } else {
-      alert(`Failed to fetch status. Status code: ${response.status}`);
+      console.log(`Failed to fetch status. Status code: ${response.status}`);
     }
   } catch (error) {
-    alert(`Error fetching status: ${error.message}`);
-    console.error('Error details:', error);
+    console.log(`Error fetching status: ${error.message}`);
+    console.error("Error details:", error);
   }
 }
-
-
-
-
-
-

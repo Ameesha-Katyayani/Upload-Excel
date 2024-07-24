@@ -105,14 +105,28 @@ async function fetchCurrentProcessingNumber() {
   try {
     const response = await axios.get("https://callerapp.onrender.com/current-processing-number");
     console.log("Current processing number response:", response);
+
+    // Log the full response data to check its structure
+    console.log("Full response data:", response.data);
+
+    // Check if the response status is 200
     if (response.status === 200) {
-      const { currentProcessingNumber } = response.data;
-      const processingDiv = document.getElementById("processing");
-      processingDiv.textContent = currentProcessingNumber ? currentProcessingNumber : "None";
+      // Verify if the data contains currentProcessingNumber
+      if (response.data && response.data.currentProcessingNumber !== undefined) {
+        const currentProcessingNumber = response.data.currentProcessingNumber;
+        const processingDiv = document.getElementById("processing");
+        processingDiv.textContent = currentProcessingNumber ? currentProcessingNumber : "None";
+      } else {
+        console.error("Unexpected response structure:", response.data);
+        alert("Response does not contain the expected 'currentProcessingNumber' field.");
+      }
     } else {
       alert(`Failed to fetch current processing number. Status code: ${response.status}`);
     }
   } catch (error) {
     alert(`Error fetching current processing number: ${error.message}`);
+    console.error("Error details:", error);
   }
 }
+
+

@@ -8,8 +8,8 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("fileInput").addEventListener("change", handleFile, false);
-  fetchCurrentProcessingNumber();
-  setInterval(fetchCurrentProcessingNumber, 2000);
+  fetchStatus();
+  setInterval(fetchStatus, 2000);
 });
 
 function handleFile(event) {
@@ -97,36 +97,57 @@ async function sendPhoneNumbers(phoneNumbers) {
     await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  fetchCurrentProcessingNumber();
+  // fetchCurrentProcessingNumber();
 }
 
 
-async function fetchCurrentProcessingNumber() {
+// async function fetchCurrentProcessingNumber() {
+//   try {
+//     const response = await axios.get("https://callerapp.onrender.com/current-processing-number");
+//     console.log("Current processing number response:", response);
+
+//     // Log the full response data to check its structure
+//     console.log("Full response data:", response.data);
+
+//     // Check if the response status is 200
+//     if (response.status === 200) {
+//       // Verify if the data contains currentProcessingNumber
+//       if (response.data && response.data.currentProcessingNumber !== undefined) {
+//         const currentProcessingNumber = response.data.currentProcessingNumber;
+//         const processingDiv = document.getElementById("processing");
+//         processingDiv.textContent = currentProcessingNumber ? currentProcessingNumber : "None";
+//       } else {
+//         console.error("Unexpected response structure:", response.data);
+//         alert("Response does not contain the expected 'currentProcessingNumber' field.");
+//       }
+//     } else {
+//       alert(`Failed to fetch current processing number. Status code: ${response.status}`);
+//     }
+//   } catch (error) {
+//     alert(`Error fetching current processing number: ${error.message}`);
+//     console.error("Error details:", error);
+//   }
+// }
+async function fetchStatus() {
   try {
-    const response = await axios.get("https://callerapp.onrender.com/current-processing-number");
-    console.log("Current processing number response:", response);
-
-    // Log the full response data to check its structure
-    console.log("Full response data:", response.data);
-
-    // Check if the response status is 200
+    const response = await axios.get('https://callerapp.onrender.com/status');
+    console.log('Status response:', response);
     if (response.status === 200) {
-      // Verify if the data contains currentProcessingNumber
-      if (response.data && response.data.currentProcessingNumber !== undefined) {
-        const currentProcessingNumber = response.data.currentProcessingNumber;
-        const processingDiv = document.getElementById("processing");
-        processingDiv.textContent = currentProcessingNumber ? currentProcessingNumber : "None";
-      } else {
-        console.error("Unexpected response structure:", response.data);
-        alert("Response does not contain the expected 'currentProcessingNumber' field.");
-      }
+      const { previousSentNumber, currentSentNumber, nextNumber } = response.data;
+      document.getElementById('previousSentNumber').textContent = previousSentNumber || 'None';
+      document.getElementById('currentSentNumber').textContent = currentSentNumber || 'None';
+      document.getElementById('nextNumber').textContent = nextNumber || 'None';
     } else {
-      alert(`Failed to fetch current processing number. Status code: ${response.status}`);
+      alert(`Failed to fetch status. Status code: ${response.status}`);
     }
   } catch (error) {
-    alert(`Error fetching current processing number: ${error.message}`);
-    console.error("Error details:", error);
+    alert(`Error fetching status: ${error.message}`);
+    console.error('Error details:', error);
   }
 }
+
+
+
+
 
 

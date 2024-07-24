@@ -7,11 +7,9 @@ document.addEventListener("DOMContentLoaded", function () {
     path: "lottie animation.json",
   });
 
-  
-  document
-    .getElementById("fileInput")
-    .addEventListener("change", handleFile, false);
-  fetchPhoneNumbers();
+  document.getElementById("fileInput").addEventListener("change", handleFile, false);
+  fetchCurrentProcessingNumber();
+  setInterval(fetchCurrentProcessingNumber, 2000);
 });
 
 function handleFile(event) {
@@ -26,7 +24,7 @@ function handleFile(event) {
     const worksheet = workbook.Sheets[sheetName];
     const jsonData = XLSX.utils.sheet_to_json(worksheet);
 
-    console.log(jsonData);
+    console.log("Parsed JSON data from Excel:", jsonData);
     displayPhoneNumbers(jsonData);
   };
 
@@ -35,36 +33,27 @@ function handleFile(event) {
 
 function displayPhoneNumbers(data) {
   const toProcessDiv = document.getElementById("toProcess");
-  toProcessDiv.innerHTML = "";
   const processingDiv = document.getElementById("processing");
-  processingDiv.innerHTML = "";
   const processedDiv = document.getElementById("processed");
-  processedDiv.innerHTML = "";
 
   if (data.length === 0) {
     toProcessDiv.innerHTML = "<p>No data found</p>";
     return;
   }
 
-  const phoneNumbers = [];
-
-  data.forEach((row) => {
-    console.log("Processing row:", row);
-    Object.keys(row).forEach((key) => {
-      let value = row[key];
-      if (typeof value === "number") {
-        value = value.toString();
+  const phoneNumbers = data.flatMap(row =>
+    Object.values(row).filter(value => {
+      if (typeof value === "string") {
+        value = value.trim();
       }
-      if (typeof value === "string" && /\d{10}/.test(value)) {
-        phoneNumbers.push(value);
-      }
-    });
-  });
+      return typeof value === "string" && /\d{10}/.test(value);
+    })
+  );
 
   console.log("Extracted phone numbers:", phoneNumbers);
 
   if (phoneNumbers.length > 0) {
-    toProcessDiv.textContent = phoneNumbers[0]; // Show the first number to be processed
+    toProcessDiv.textContent = phoneNumbers[0];
     sendPhoneNumbers(phoneNumbers);
   }
 }
@@ -74,7 +63,6 @@ async function sendPhoneNumbers(phoneNumbers) {
   const processingDiv = document.getElementById("processing");
   const processedDiv = document.getElementById("processed");
 
-  // Send the entire array of phone numbers only once
   try {
     const response = await axios.post(
       "https://callerapp.onrender.com/send-phone-numbers",
@@ -82,66 +70,49 @@ async function sendPhoneNumbers(phoneNumbers) {
       { headers: { "Content-Type": "application/json" } }
     );
 
+    console.log("Phone numbers sent response:", response);
     if (response.status === 200) {
-      console.log("Phone numbers sent:", phoneNumbers);
+      console.log("Phone numbers sent successfully:", phoneNumbers);
     } else {
-      console.error(
-        "Failed to send phone numbers. Status code:",
-        response.status
-      );
       alert(`Failed to send phone numbers. Status code: ${response.status}`);
     }
   } catch (error) {
-    console.error("Error sending phone numbers:", error);
     alert(`Error sending phone numbers: ${error.message}`);
   }
 
   for (let i = 0; i < phoneNumbers.length; i++) {
     const number = phoneNumbers[i];
 
-    // Move the number from toProcess to processing
-    toProcessDiv.textContent = ""; // Clear the toProcess section
-    processingDiv.textContent = number; // Show the current processing number
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Add delay for demo purposes
+    toProcessDiv.textContent = "";
+    processingDiv.textContent = number;
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
-    // Move the number from processing to processed
-    processingDiv.textContent = ""; // Clear the processing section
-    processedDiv.textContent = number; // Show the recently processed number
+    processingDiv.textContent = "";
+    processedDiv.textContent = number;
 
-    // Update the display sections for the next number
     if (i + 1 < phoneNumbers.length) {
-      toProcessDiv.textContent = phoneNumbers[i + 1]; // Show the next number to be processed
+      toProcessDiv.textContent = phoneNumbers[i + 1];
     }
 
-    await new Promise((resolve) => setTimeout(resolve, 1000)); // Add delay for demo purposes
+    await new Promise(resolve => setTimeout(resolve, 1000));
   }
 
-  fetchPhoneNumbers(); 
+  fetchCurrentProcessingNumber();
 }
 
-async function fetchPhoneNumbers() {
-  try {
-    const response = await axios.get(
-      "https://callerapp.onrender.com/send-phone-numbers"
-    );
 
+async function fetchCurrentProcessingNumber() {
+  try {
+    const response = await axios.get("https://callerapp.onrender.com/current-processing-number");
+    console.log("Current processing number response:", response);
     if (response.status === 200) {
-      const fetchedNumbers = response.data.phone_numbers;
-      if (Array.isArray(fetchedNumbers) && fetchedNumbers.length > 0) {
-        displayPhoneNumbers(fetchedNumbers);
-      } else {
-        console.log("No phone numbers fetched");
-        alert("No phone numbers fetched");
-      }
+      const { currentProcessingNumber } = response.data;
+      const processingDiv = document.getElementById("processing");
+      processingDiv.textContent = currentProcessingNumber ? currentProcessingNumber : "None";
     } else {
-      console.error(
-        "Failed to fetch phone numbers. Status code:",
-        response.status
-      );
-      alert(`Failed to fetch phone numbers. Status code: ${response.status}`);
+      alert(`Failed to fetch current processing number. Status code: ${response.status}`);
     }
   } catch (error) {
-    console.error("Error fetching phone numbers:", error);
-    alert(`Error fetching phone numbers: ${error.message}`);
+    alert(`Error fetching current processing number: ${error.message}`);
   }
 }
